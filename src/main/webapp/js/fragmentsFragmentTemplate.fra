@@ -1,0 +1,1487 @@
+
+	
+	############################################################################
+				Configuração do beans.xml referente aos novos serviços.
+	############################################################################
+	<jaxrs:server id="services" address="/">
+		<jaxrs:serviceBeans>
+				<bean class="br.com.sints.app.rs.GenreResources" />
+		<bean class="br.com.sints.app.rs.MovieResources" />
+		<bean class="br.com.sints.app.rs.LanguageResources" />
+		<bean class="br.com.sints.app.rs.ActorResources" />
+		<bean class="br.com.sints.app.rs.UserResources" />
+		<bean class="br.com.sints.app.rs.RoleResources" />
+		<bean class="br.com.sints.app.rs.PermissionResources" />
+		<bean class="br.com.sints.app.rs.GroupResources" />
+		<bean class="br.com.sints.app.rs.ItemResources" />
+		</jaxrs:serviceBeans>
+		<jaxrs:providers>
+			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
+		</jaxrs:providers>
+	</jaxrs:server>
+	
+	
+	############################################################################
+						Router para as entidades criadas
+	############################################################################
+
+		var PageGenre = require('views/genre/PageGenre');
+		var FormGenre = require('views/genre/FormGenre');
+		var GenreModel = require('models/GenreModel');
+		var PageMovie = require('views/movie/PageMovie');
+		var FormMovie = require('views/movie/FormMovie');
+		var MovieModel = require('models/MovieModel');
+		var PageLanguage = require('views/language/PageLanguage');
+		var FormLanguage = require('views/language/FormLanguage');
+		var LanguageModel = require('models/LanguageModel');
+		var PageActor = require('views/actor/PageActor');
+		var FormActor = require('views/actor/FormActor');
+		var ActorModel = require('models/ActorModel');
+		var PageUser = require('views/user/PageUser');
+		var FormUser = require('views/user/FormUser');
+		var UserModel = require('models/UserModel');
+		var PageRole = require('views/role/PageRole');
+		var FormRole = require('views/role/FormRole');
+		var RoleModel = require('models/RoleModel');
+		var PagePermission = require('views/permission/PagePermission');
+		var FormPermission = require('views/permission/FormPermission');
+		var PermissionModel = require('models/PermissionModel');
+		var PageGroup = require('views/group/PageGroup');
+		var FormGroup = require('views/group/FormGroup');
+		var GroupModel = require('models/GroupModel');
+		var PageItem = require('views/item/PageItem');
+		var FormItem = require('views/item/FormItem');
+		var ItemModel = require('models/ItemModel');
+	
+			// hashs de Genre
+			'app/genres' : 'genres',
+			'app/newGenre' : 'newGenre',
+			'app/editGenre/:id' : 'editGenre',
+			// hashs de Movie
+			'app/movies' : 'movies',
+			'app/newMovie' : 'newMovie',
+			'app/editMovie/:id' : 'editMovie',
+			// hashs de Language
+			'app/languages' : 'languages',
+			'app/newLanguage' : 'newLanguage',
+			'app/editLanguage/:id' : 'editLanguage',
+			// hashs de Actor
+			'app/actors' : 'actors',
+			'app/newActor' : 'newActor',
+			'app/editActor/:id' : 'editActor',
+			// hashs de User
+			'app/users' : 'users',
+			'app/newUser' : 'newUser',
+			'app/editUser/:id' : 'editUser',
+			// hashs de Role
+			'app/roles' : 'roles',
+			'app/newRole' : 'newRole',
+			'app/editRole/:id' : 'editRole',
+			// hashs de Permission
+			'app/permissions' : 'permissions',
+			'app/newPermission' : 'newPermission',
+			'app/editPermission/:id' : 'editPermission',
+			// hashs de Group
+			'app/groups' : 'groups',
+			'app/newGroup' : 'newGroup',
+			'app/editGroup/:id' : 'editGroup',
+			// hashs de Item
+			'app/items' : 'items',
+			'app/newItem' : 'newItem',
+			'app/editItem/:id' : 'editItem',
+			
+			//configuração das rotas de Genre
+			appRouter.on('route:genres', function() {
+				util.markActiveItem('genres');
+				appRouter.pageGenre = new PageGenre();
+				App.mainRegion.show(appRouter.pageGenre);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Genre',
+					itemSubFolderName : 'Grid',
+					url : 'app/genres'
+				});
+			});
+	
+			appRouter.on('route:newGenre', function() {
+				util.markActiveItem('genres');
+				var formGenre = new FormGenre({
+					model : new GenreModel(),
+				});
+				App.mainRegion.show(formGenre);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Genre',
+					itemSubFolderName : 'Formulário de cadastro',
+					url : 'app/genres'
+				});
+			});
+			
+			appRouter.on('route:editGenre', function(idGenre) {
+				util.markActiveItem('genres');
+				var formGenre = null;
+				if (appRouter.pageGenre) {
+					formGenre = new FormGenre({
+						model : appRouter.pageGenre.genres.get(idGenre),
+					});
+					App.mainRegion.show(formGenre);
+				} else {
+					var model = new GenreModel({
+						id : idGenre,
+					})
+					model.fetch({
+						success : function(model) {
+							formGenre = new FormGenre({
+								model : model,
+							});
+							App.mainRegion.show(formGenre);
+						},
+						error : function(x, y, z) {
+							console.error(x, y, z);
+						}
+					})
+					util.breadcrumb({
+						iconClass : 'fa-calendar',
+						itemLabel : 'Genreos',
+						itemSubFolderName : 'Formulário de atualização',
+						url : 'app/genres'
+					});
+				}
+			});
+			//configuração das rotas de Movie
+			appRouter.on('route:movies', function() {
+				util.markActiveItem('movies');
+				appRouter.pageMovie = new PageMovie();
+				App.mainRegion.show(appRouter.pageMovie);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Movie',
+					itemSubFolderName : 'Grid',
+					url : 'app/movies'
+				});
+			});
+	
+			appRouter.on('route:newMovie', function() {
+				util.markActiveItem('movies');
+				var formMovie = new FormMovie({
+					model : new MovieModel(),
+				});
+				App.mainRegion.show(formMovie);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Movie',
+					itemSubFolderName : 'Formulário de cadastro',
+					url : 'app/movies'
+				});
+			});
+			
+			appRouter.on('route:editMovie', function(idMovie) {
+				util.markActiveItem('movies');
+				var formMovie = null;
+				if (appRouter.pageMovie) {
+					formMovie = new FormMovie({
+						model : appRouter.pageMovie.movies.get(idMovie),
+					});
+					App.mainRegion.show(formMovie);
+				} else {
+					var model = new MovieModel({
+						id : idMovie,
+					})
+					model.fetch({
+						success : function(model) {
+							formMovie = new FormMovie({
+								model : model,
+							});
+							App.mainRegion.show(formMovie);
+						},
+						error : function(x, y, z) {
+							console.error(x, y, z);
+						}
+					})
+					util.breadcrumb({
+						iconClass : 'fa-calendar',
+						itemLabel : 'Movieos',
+						itemSubFolderName : 'Formulário de atualização',
+						url : 'app/movies'
+					});
+				}
+			});
+			//configuração das rotas de Language
+			appRouter.on('route:languages', function() {
+				util.markActiveItem('languages');
+				appRouter.pageLanguage = new PageLanguage();
+				App.mainRegion.show(appRouter.pageLanguage);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Language',
+					itemSubFolderName : 'Grid',
+					url : 'app/languages'
+				});
+			});
+	
+			appRouter.on('route:newLanguage', function() {
+				util.markActiveItem('languages');
+				var formLanguage = new FormLanguage({
+					model : new LanguageModel(),
+				});
+				App.mainRegion.show(formLanguage);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Language',
+					itemSubFolderName : 'Formulário de cadastro',
+					url : 'app/languages'
+				});
+			});
+			
+			appRouter.on('route:editLanguage', function(idLanguage) {
+				util.markActiveItem('languages');
+				var formLanguage = null;
+				if (appRouter.pageLanguage) {
+					formLanguage = new FormLanguage({
+						model : appRouter.pageLanguage.languages.get(idLanguage),
+					});
+					App.mainRegion.show(formLanguage);
+				} else {
+					var model = new LanguageModel({
+						id : idLanguage,
+					})
+					model.fetch({
+						success : function(model) {
+							formLanguage = new FormLanguage({
+								model : model,
+							});
+							App.mainRegion.show(formLanguage);
+						},
+						error : function(x, y, z) {
+							console.error(x, y, z);
+						}
+					})
+					util.breadcrumb({
+						iconClass : 'fa-calendar',
+						itemLabel : 'Languageos',
+						itemSubFolderName : 'Formulário de atualização',
+						url : 'app/languages'
+					});
+				}
+			});
+			//configuração das rotas de Actor
+			appRouter.on('route:actors', function() {
+				util.markActiveItem('actors');
+				appRouter.pageActor = new PageActor();
+				App.mainRegion.show(appRouter.pageActor);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Actor',
+					itemSubFolderName : 'Grid',
+					url : 'app/actors'
+				});
+			});
+	
+			appRouter.on('route:newActor', function() {
+				util.markActiveItem('actors');
+				var formActor = new FormActor({
+					model : new ActorModel(),
+				});
+				App.mainRegion.show(formActor);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Actor',
+					itemSubFolderName : 'Formulário de cadastro',
+					url : 'app/actors'
+				});
+			});
+			
+			appRouter.on('route:editActor', function(idActor) {
+				util.markActiveItem('actors');
+				var formActor = null;
+				if (appRouter.pageActor) {
+					formActor = new FormActor({
+						model : appRouter.pageActor.actors.get(idActor),
+					});
+					App.mainRegion.show(formActor);
+				} else {
+					var model = new ActorModel({
+						id : idActor,
+					})
+					model.fetch({
+						success : function(model) {
+							formActor = new FormActor({
+								model : model,
+							});
+							App.mainRegion.show(formActor);
+						},
+						error : function(x, y, z) {
+							console.error(x, y, z);
+						}
+					})
+					util.breadcrumb({
+						iconClass : 'fa-calendar',
+						itemLabel : 'Actoros',
+						itemSubFolderName : 'Formulário de atualização',
+						url : 'app/actors'
+					});
+				}
+			});
+			//configuração das rotas de User
+			appRouter.on('route:users', function() {
+				util.markActiveItem('users');
+				appRouter.pageUser = new PageUser();
+				App.mainRegion.show(appRouter.pageUser);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'User',
+					itemSubFolderName : 'Grid',
+					url : 'app/users'
+				});
+			});
+	
+			appRouter.on('route:newUser', function() {
+				util.markActiveItem('users');
+				var formUser = new FormUser({
+					model : new UserModel(),
+				});
+				App.mainRegion.show(formUser);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'User',
+					itemSubFolderName : 'Formulário de cadastro',
+					url : 'app/users'
+				});
+			});
+			
+			appRouter.on('route:editUser', function(idUser) {
+				util.markActiveItem('users');
+				var formUser = null;
+				if (appRouter.pageUser) {
+					formUser = new FormUser({
+						model : appRouter.pageUser.users.get(idUser),
+					});
+					App.mainRegion.show(formUser);
+				} else {
+					var model = new UserModel({
+						id : idUser,
+					})
+					model.fetch({
+						success : function(model) {
+							formUser = new FormUser({
+								model : model,
+							});
+							App.mainRegion.show(formUser);
+						},
+						error : function(x, y, z) {
+							console.error(x, y, z);
+						}
+					})
+					util.breadcrumb({
+						iconClass : 'fa-calendar',
+						itemLabel : 'Useros',
+						itemSubFolderName : 'Formulário de atualização',
+						url : 'app/users'
+					});
+				}
+			});
+			//configuração das rotas de Role
+			appRouter.on('route:roles', function() {
+				util.markActiveItem('roles');
+				appRouter.pageRole = new PageRole();
+				App.mainRegion.show(appRouter.pageRole);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Role',
+					itemSubFolderName : 'Grid',
+					url : 'app/roles'
+				});
+			});
+	
+			appRouter.on('route:newRole', function() {
+				util.markActiveItem('roles');
+				var formRole = new FormRole({
+					model : new RoleModel(),
+				});
+				App.mainRegion.show(formRole);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Role',
+					itemSubFolderName : 'Formulário de cadastro',
+					url : 'app/roles'
+				});
+			});
+			
+			appRouter.on('route:editRole', function(idRole) {
+				util.markActiveItem('roles');
+				var formRole = null;
+				if (appRouter.pageRole) {
+					formRole = new FormRole({
+						model : appRouter.pageRole.roles.get(idRole),
+					});
+					App.mainRegion.show(formRole);
+				} else {
+					var model = new RoleModel({
+						id : idRole,
+					})
+					model.fetch({
+						success : function(model) {
+							formRole = new FormRole({
+								model : model,
+							});
+							App.mainRegion.show(formRole);
+						},
+						error : function(x, y, z) {
+							console.error(x, y, z);
+						}
+					})
+					util.breadcrumb({
+						iconClass : 'fa-calendar',
+						itemLabel : 'Roleos',
+						itemSubFolderName : 'Formulário de atualização',
+						url : 'app/roles'
+					});
+				}
+			});
+			//configuração das rotas de Permission
+			appRouter.on('route:permissions', function() {
+				util.markActiveItem('permissions');
+				appRouter.pagePermission = new PagePermission();
+				App.mainRegion.show(appRouter.pagePermission);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Permission',
+					itemSubFolderName : 'Grid',
+					url : 'app/permissions'
+				});
+			});
+	
+			appRouter.on('route:newPermission', function() {
+				util.markActiveItem('permissions');
+				var formPermission = new FormPermission({
+					model : new PermissionModel(),
+				});
+				App.mainRegion.show(formPermission);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Permission',
+					itemSubFolderName : 'Formulário de cadastro',
+					url : 'app/permissions'
+				});
+			});
+			
+			appRouter.on('route:editPermission', function(idPermission) {
+				util.markActiveItem('permissions');
+				var formPermission = null;
+				if (appRouter.pagePermission) {
+					formPermission = new FormPermission({
+						model : appRouter.pagePermission.permissions.get(idPermission),
+					});
+					App.mainRegion.show(formPermission);
+				} else {
+					var model = new PermissionModel({
+						id : idPermission,
+					})
+					model.fetch({
+						success : function(model) {
+							formPermission = new FormPermission({
+								model : model,
+							});
+							App.mainRegion.show(formPermission);
+						},
+						error : function(x, y, z) {
+							console.error(x, y, z);
+						}
+					})
+					util.breadcrumb({
+						iconClass : 'fa-calendar',
+						itemLabel : 'Permissionos',
+						itemSubFolderName : 'Formulário de atualização',
+						url : 'app/permissions'
+					});
+				}
+			});
+			//configuração das rotas de Group
+			appRouter.on('route:groups', function() {
+				util.markActiveItem('groups');
+				appRouter.pageGroup = new PageGroup();
+				App.mainRegion.show(appRouter.pageGroup);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Group',
+					itemSubFolderName : 'Grid',
+					url : 'app/groups'
+				});
+			});
+	
+			appRouter.on('route:newGroup', function() {
+				util.markActiveItem('groups');
+				var formGroup = new FormGroup({
+					model : new GroupModel(),
+				});
+				App.mainRegion.show(formGroup);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Group',
+					itemSubFolderName : 'Formulário de cadastro',
+					url : 'app/groups'
+				});
+			});
+			
+			appRouter.on('route:editGroup', function(idGroup) {
+				util.markActiveItem('groups');
+				var formGroup = null;
+				if (appRouter.pageGroup) {
+					formGroup = new FormGroup({
+						model : appRouter.pageGroup.groups.get(idGroup),
+					});
+					App.mainRegion.show(formGroup);
+				} else {
+					var model = new GroupModel({
+						id : idGroup,
+					})
+					model.fetch({
+						success : function(model) {
+							formGroup = new FormGroup({
+								model : model,
+							});
+							App.mainRegion.show(formGroup);
+						},
+						error : function(x, y, z) {
+							console.error(x, y, z);
+						}
+					})
+					util.breadcrumb({
+						iconClass : 'fa-calendar',
+						itemLabel : 'Groupos',
+						itemSubFolderName : 'Formulário de atualização',
+						url : 'app/groups'
+					});
+				}
+			});
+			//configuração das rotas de Item
+			appRouter.on('route:items', function() {
+				util.markActiveItem('items');
+				appRouter.pageItem = new PageItem();
+				App.mainRegion.show(appRouter.pageItem);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Item',
+					itemSubFolderName : 'Grid',
+					url : 'app/items'
+				});
+			});
+	
+			appRouter.on('route:newItem', function() {
+				util.markActiveItem('items');
+				var formItem = new FormItem({
+					model : new ItemModel(),
+				});
+				App.mainRegion.show(formItem);
+				util.breadcrumb({
+					iconClass : 'fa-desktop',
+					itemLabel : 'Item',
+					itemSubFolderName : 'Formulário de cadastro',
+					url : 'app/items'
+				});
+			});
+			
+			appRouter.on('route:editItem', function(idItem) {
+				util.markActiveItem('items');
+				var formItem = null;
+				if (appRouter.pageItem) {
+					formItem = new FormItem({
+						model : appRouter.pageItem.items.get(idItem),
+					});
+					App.mainRegion.show(formItem);
+				} else {
+					var model = new ItemModel({
+						id : idItem,
+					})
+					model.fetch({
+						success : function(model) {
+							formItem = new FormItem({
+								model : model,
+							});
+							App.mainRegion.show(formItem);
+						},
+						error : function(x, y, z) {
+							console.error(x, y, z);
+						}
+					})
+					util.breadcrumb({
+						iconClass : 'fa-calendar',
+						itemLabel : 'Itemos',
+						itemSubFolderName : 'Formulário de atualização',
+						url : 'app/items'
+					});
+				}
+			});
+			
+
+	############################################################################
+						Menu de cadastros
+	############################################################################
+			<li id="genres" class="">
+				<a href="#app/genres">
+					<i class="menu-icon fa fa-caret-right"></i>
+					Genre
+				</a>
+				<b class="arrow"></b>
+			</li>
+			<li id="movies" class="">
+				<a href="#app/movies">
+					<i class="menu-icon fa fa-caret-right"></i>
+					Movie
+				</a>
+				<b class="arrow"></b>
+			</li>
+			<li id="languages" class="">
+				<a href="#app/languages">
+					<i class="menu-icon fa fa-caret-right"></i>
+					Language
+				</a>
+				<b class="arrow"></b>
+			</li>
+			<li id="actors" class="">
+				<a href="#app/actors">
+					<i class="menu-icon fa fa-caret-right"></i>
+					Actor
+				</a>
+				<b class="arrow"></b>
+			</li>
+			<li id="users" class="">
+				<a href="#app/users">
+					<i class="menu-icon fa fa-caret-right"></i>
+					Usuário
+				</a>
+				<b class="arrow"></b>
+			</li>
+			<li id="roles" class="">
+				<a href="#app/roles">
+					<i class="menu-icon fa fa-caret-right"></i>
+					Papel
+				</a>
+				<b class="arrow"></b>
+			</li>
+			<li id="permissions" class="">
+				<a href="#app/permissions">
+					<i class="menu-icon fa fa-caret-right"></i>
+					Permissão
+				</a>
+				<b class="arrow"></b>
+			</li>
+			<li id="groups" class="">
+				<a href="#app/groups">
+					<i class="menu-icon fa fa-caret-right"></i>
+					Grupo de Permissões
+				</a>
+				<b class="arrow"></b>
+			</li>
+			<li id="items" class="">
+				<a href="#app/items">
+					<i class="menu-icon fa fa-caret-right"></i>
+					Item
+				</a>
+				<b class="arrow"></b>
+			</li>
+		
+	############################################################################
+						Parser json-> objeto objeto -> json
+	############################################################################
+	//converte de entidade para json
+	public static JsonGenre toJson(Genre genre) {
+		JsonGenre jsonGenre = new JsonGenre();
+		
+		jsonGenre.setId(genre.getId());
+	    jsonGenre.setName(genre.getName());
+		return jsonGenre;
+	}
+
+	public static Genre toEntity(JsonGenre jsonGenre) {
+		Genre genre = new Genre();
+		
+		genre.setId(jsonGenre.getId());
+		genre.setName(jsonGenre.getName());
+		return genre;
+	}		
+	
+	public static List<JsonGenre> toListJsonGenres(List<Genre> all) {
+		List<JsonGenre> jsonGenres = new ArrayList<JsonGenre>();
+		for (Genre genre : all) {
+			jsonGenres.add(toJson(genre));
+		}
+		return jsonGenres;
+	}
+	//converte de entidade para json
+	public static JsonMovie toJson(Movie movie) {
+		JsonMovie jsonMovie = new JsonMovie();
+		
+		jsonMovie.setId(movie.getId());
+	    jsonMovie.setSinopsis(movie.getSinopsis());
+		jsonMovie.setReleaseDate(DateUtil.localDateAsString(movie.getReleaseDate()));
+	    jsonMovie.setBudget(movie.getBudget());
+	    jsonMovie.setTitle(movie.getTitle());
+		jsonMovie.setLanguage(toJson(movie.getLanguage()));		
+		return jsonMovie;
+	}
+
+	public static Movie toEntity(JsonMovie jsonMovie) {
+		Movie movie = new Movie();
+		
+		movie.setId(jsonMovie.getId());
+		movie.setSinopsis(jsonMovie.getSinopsis());
+	    movie.setReleaseDate(DateUtil.stringAsLocalDate(jsonMovie.getReleaseDate()));
+		movie.setBudget(jsonMovie.getBudget());
+		movie.setTitle(jsonMovie.getTitle());
+		movie.setLanguage(toEntity(jsonMovie.getLanguage()));					
+		return movie;
+	}		
+	
+	public static List<JsonMovie> toListJsonMovies(List<Movie> all) {
+		List<JsonMovie> jsonMovies = new ArrayList<JsonMovie>();
+		for (Movie movie : all) {
+			jsonMovies.add(toJson(movie));
+		}
+		return jsonMovies;
+	}
+	//converte de entidade para json
+	public static JsonLanguage toJson(Language language) {
+		JsonLanguage jsonLanguage = new JsonLanguage();
+		
+		jsonLanguage.setId(language.getId());
+	    jsonLanguage.setName(language.getName());
+		return jsonLanguage;
+	}
+
+	public static Language toEntity(JsonLanguage jsonLanguage) {
+		Language language = new Language();
+		
+		language.setId(jsonLanguage.getId());
+		language.setName(jsonLanguage.getName());
+		return language;
+	}		
+	
+	public static List<JsonLanguage> toListJsonLanguages(List<Language> all) {
+		List<JsonLanguage> jsonLanguages = new ArrayList<JsonLanguage>();
+		for (Language language : all) {
+			jsonLanguages.add(toJson(language));
+		}
+		return jsonLanguages;
+	}
+	//converte de entidade para json
+	public static JsonActor toJson(Actor actor) {
+		JsonActor jsonActor = new JsonActor();
+		
+		jsonActor.setId(actor.getId());
+		jsonActor.setBirthDate(DateUtil.localDateAsString(actor.getBirthDate()));
+	    jsonActor.setName(actor.getName());
+		return jsonActor;
+	}
+
+	public static Actor toEntity(JsonActor jsonActor) {
+		Actor actor = new Actor();
+		
+		actor.setId(jsonActor.getId());
+	    actor.setBirthDate(DateUtil.stringAsLocalDate(jsonActor.getBirthDate()));
+		actor.setName(jsonActor.getName());
+		return actor;
+	}		
+	
+	public static List<JsonActor> toListJsonActors(List<Actor> all) {
+		List<JsonActor> jsonActors = new ArrayList<JsonActor>();
+		for (Actor actor : all) {
+			jsonActors.add(toJson(actor));
+		}
+		return jsonActors;
+	}
+	//converte de entidade para json
+	public static JsonUser toJson(User user) {
+		JsonUser jsonUser = new JsonUser();
+		
+		jsonUser.setId(user.getId());
+	    jsonUser.setName(user.getName());
+	    jsonUser.setUsername(user.getUsername());
+	    jsonUser.setEmail(user.getEmail());
+	    jsonUser.setPassword(user.getPassword());
+	    jsonUser.setEnable(user.getEnable());
+	    jsonUser.setImage(user.getImage());
+		return jsonUser;
+	}
+
+	public static User toEntity(JsonUser jsonUser) {
+		User user = new User();
+		
+		user.setId(jsonUser.getId());
+		user.setName(jsonUser.getName());
+		user.setUsername(jsonUser.getUsername());
+		user.setEmail(jsonUser.getEmail());
+		user.setPassword(jsonUser.getPassword());
+		user.setEnable(jsonUser.getEnable());
+		user.setImage(jsonUser.getImage());
+		return user;
+	}		
+	
+	public static List<JsonUser> toListJsonUsers(List<User> all) {
+		List<JsonUser> jsonUsers = new ArrayList<JsonUser>();
+		for (User user : all) {
+			jsonUsers.add(toJson(user));
+		}
+		return jsonUsers;
+	}
+	//converte de entidade para json
+	public static JsonRole toJson(Role role) {
+		JsonRole jsonRole = new JsonRole();
+		
+		jsonRole.setId(role.getId());
+	    jsonRole.setAuthority(role.getAuthority());
+	    jsonRole.setDescription(role.getDescription());
+		return jsonRole;
+	}
+
+	public static Role toEntity(JsonRole jsonRole) {
+		Role role = new Role();
+		
+		role.setId(jsonRole.getId());
+		role.setAuthority(jsonRole.getAuthority());
+		role.setDescription(jsonRole.getDescription());
+		return role;
+	}		
+	
+	public static List<JsonRole> toListJsonRoles(List<Role> all) {
+		List<JsonRole> jsonRoles = new ArrayList<JsonRole>();
+		for (Role role : all) {
+			jsonRoles.add(toJson(role));
+		}
+		return jsonRoles;
+	}
+	//converte de entidade para json
+	public static JsonPermission toJson(Permission permission) {
+		JsonPermission jsonPermission = new JsonPermission();
+		
+		jsonPermission.setId(permission.getId());
+	    jsonPermission.setName(permission.getName());
+	    jsonPermission.setDescription(permission.getDescription());
+	    jsonPermission.setOperation(permission.getOperation());
+	    jsonPermission.setTagReminder(permission.getTagReminder());
+		jsonPermission.setItem(toJson(permission.getItem()));		
+		return jsonPermission;
+	}
+
+	public static Permission toEntity(JsonPermission jsonPermission) {
+		Permission permission = new Permission();
+		
+		permission.setId(jsonPermission.getId());
+		permission.setName(jsonPermission.getName());
+		permission.setDescription(jsonPermission.getDescription());
+		permission.setOperation(jsonPermission.getOperation());
+		permission.setTagReminder(jsonPermission.getTagReminder());
+		permission.setItem(toEntity(jsonPermission.getItem()));					
+		return permission;
+	}		
+	
+	public static List<JsonPermission> toListJsonPermissions(List<Permission> all) {
+		List<JsonPermission> jsonPermissions = new ArrayList<JsonPermission>();
+		for (Permission permission : all) {
+			jsonPermissions.add(toJson(permission));
+		}
+		return jsonPermissions;
+	}
+	//converte de entidade para json
+	public static JsonGroup toJson(Group group) {
+		JsonGroup jsonGroup = new JsonGroup();
+		
+		jsonGroup.setId(group.getId());
+	    jsonGroup.setName(group.getName());
+	    jsonGroup.setDescription(group.getDescription());
+		return jsonGroup;
+	}
+
+	public static Group toEntity(JsonGroup jsonGroup) {
+		Group group = new Group();
+		
+		group.setId(jsonGroup.getId());
+		group.setName(jsonGroup.getName());
+		group.setDescription(jsonGroup.getDescription());
+		return group;
+	}		
+	
+	public static List<JsonGroup> toListJsonGroups(List<Group> all) {
+		List<JsonGroup> jsonGroups = new ArrayList<JsonGroup>();
+		for (Group group : all) {
+			jsonGroups.add(toJson(group));
+		}
+		return jsonGroups;
+	}
+	//converte de entidade para json
+	public static JsonItem toJson(Item item) {
+		JsonItem jsonItem = new JsonItem();
+		
+		jsonItem.setId(item.getId());
+	    jsonItem.setName(item.getName());
+	    jsonItem.setItemType(item.getItemType());
+	    jsonItem.setIdentifier(item.getIdentifier());
+	    jsonItem.setDescription(item.getDescription());
+		return jsonItem;
+	}
+
+	public static Item toEntity(JsonItem jsonItem) {
+		Item item = new Item();
+		
+		item.setId(jsonItem.getId());
+		item.setName(jsonItem.getName());
+		item.setItemType(jsonItem.getItemType());
+		item.setIdentifier(jsonItem.getIdentifier());
+		item.setDescription(jsonItem.getDescription());
+		return item;
+	}		
+	
+	public static List<JsonItem> toListJsonItems(List<Item> all) {
+		List<JsonItem> jsonItems = new ArrayList<JsonItem>();
+		for (Item item : all) {
+			jsonItems.add(toJson(item));
+		}
+		return jsonItems;
+	}
+
+	############################################################################
+						Seed permissions
+	############################################################################
+
+-- registros de autorização para Genre	
+	-- campos de tela
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Item de menu principal para tela de pesquisa de Genre', 			'item-list-Genre',	'COMPONENT', 'Menu Genres'					);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao menu de Genre', 'Usuário Poderá ver e acessar o item de menu de Genre ', 'LEITURA', 'CRUD Genre , item Menu ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botôes de salvar e salvar e continuar no formulario de Genre', 	'save-Genre', 		'COMPONENT', 'Botão Salva Genre'			);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao botão de salvar e salvar e continuar no formulario de Genre', 'Usuário Poderá ver e acessar o botão de de salvar e salvar e continuar no formulario de Genre ', 'LEITURA', 'CRUD Genre , botão salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de novo na listagem de Genre', 								'new-Genre', 		'COMPONENT', 'Botão Novo Genre'				);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao botão de novo no formulario de Genre', 'Usuário Poderá ver e acessar ao botão de novo no formulario de Genre ', 'LEITURA', 'CRUD Genre , botão novo ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de Edição de Genre no grid de Genre na Listagem', 			'edit-Genre', 		'COMPONENT', 'Botão Editar Genre no Grid de Genre');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao botão de edição no grid de Genre', 'Usuário Poderá ver e acessar ao botão de edicao no grid de Genre ', 'LEITURA', 'CRUD Genre , botão edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de deletar Genre no grid de Genre na Listagem', 			'remove-Genre', 	'COMPONENT', 'Botão deletar Genre no Grid de Genre');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao botão de delete no grid de Genre', 'Usuário Poderá ver e acessar ao botão de delete no grid de Genre ', 'LEITURA', 'CRUD Genre , botão delete ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+    --telas
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de listagem de Genre', 										'app/genres', 		'SCREEN', 'Pesquisa de  Genres');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso a tela de listagem de  Genre', 'Usuário Poderá ver e acessar a tela de listagem de  Genre ', 'LEITURA', 'CRUD Genre , tela listagem  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de Cadastro de Genre', 										'app/newGenre', 	'SCREEN', 'Cadastro  de Genres');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso a tela de cadastro de  Genre', 'Usuário Poderá ver e acessar a tela de cadastro de  Genre ', 'LEITURA', 'CRUD Genre , tela de cadastro  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de edição de Genre', 										'app/editGenre', 	'SCREEN', 'Edição de  Genres');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso a tela de edição de  Genre', 'Usuário Poderá ver e acessar a tela de edição de  Genre ', 'LEITURA', 'CRUD Genre , tela de edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	-- servicos
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Genres', 										'crud/genres', 		'SERVICE', 			'Servico de Genres');  -- ler e escrever
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao serviço de listagem de  Genre', 'Usuário Poderá acessar ao serviço de listagem de  Genre ', 'LEITURA', 'CRUD Genre , servico listar varios ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao serviço para salvar um novo Genre', 'Usuário Poderá acessar ao serviço para salvar um novo Genre ', 'ESCRITA', 'CRUD Genre , servico salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso TODOS os Genres', 									'crud/genres/all', 		'SERVICE', 			'Servico de TODOS os Genres');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao serviço para listar todos  os Genre', 'Usuário Poderá acessar ao serviço para salvar um novo Genre ', 'LEITURA', 'CRUD Genre , servico listar todos ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Genres por filtro', 							'crud/genres/filter', 		'SERVICE', 			'Servico de Genres sob filtro');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao serviço para listagem por filtro de Genre', 'Usuário Poderá acessar ao serviço para listagem por filtro de Genre ', 'LEITURA', 'CRUD Genre , servico listar por filtro ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso a um Genre específico', 							'crud/genres/[0-9]', 		'SERVICE', 			'Servico para acesso a Genre especifico'); --GET, PUT e DELETE 
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao serviço para listagem de um unico Genre', 'Usuário Poderá acessar ao serviço para listagem de um unico Genre ', 'LEITURA', 'CRUD Genre , servico listar um unico ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao serviço para atualizacao de um unico Genre', 'Usuário Poderá acessar ao serviço para atualizacao de um unico Genre ', 'ATUALIZACAO', 'CRUD Genre , servico atualização ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Genre. Permissão de acesso ao serviço para deleção/remoção de um unico Genre', 'Usuário Poderá acessar ao serviço para deleção/remoção de um unico Genre ', 'DELECAO', 'CRUD Genre , servico remoção deleção');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+-- registros de autorização para Movie	
+	-- campos de tela
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Item de menu principal para tela de pesquisa de Movie', 			'item-list-Movie',	'COMPONENT', 'Menu Movies'					);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao menu de Movie', 'Usuário Poderá ver e acessar o item de menu de Movie ', 'LEITURA', 'CRUD Movie , item Menu ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botôes de salvar e salvar e continuar no formulario de Movie', 	'save-Movie', 		'COMPONENT', 'Botão Salva Movie'			);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao botão de salvar e salvar e continuar no formulario de Movie', 'Usuário Poderá ver e acessar o botão de de salvar e salvar e continuar no formulario de Movie ', 'LEITURA', 'CRUD Movie , botão salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de novo na listagem de Movie', 								'new-Movie', 		'COMPONENT', 'Botão Novo Movie'				);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao botão de novo no formulario de Movie', 'Usuário Poderá ver e acessar ao botão de novo no formulario de Movie ', 'LEITURA', 'CRUD Movie , botão novo ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de Edição de Movie no grid de Movie na Listagem', 			'edit-Movie', 		'COMPONENT', 'Botão Editar Movie no Grid de Movie');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao botão de edição no grid de Movie', 'Usuário Poderá ver e acessar ao botão de edicao no grid de Movie ', 'LEITURA', 'CRUD Movie , botão edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de deletar Movie no grid de Movie na Listagem', 			'remove-Movie', 	'COMPONENT', 'Botão deletar Movie no Grid de Movie');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao botão de delete no grid de Movie', 'Usuário Poderá ver e acessar ao botão de delete no grid de Movie ', 'LEITURA', 'CRUD Movie , botão delete ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+    --telas
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de listagem de Movie', 										'app/movies', 		'SCREEN', 'Pesquisa de  Movies');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso a tela de listagem de  Movie', 'Usuário Poderá ver e acessar a tela de listagem de  Movie ', 'LEITURA', 'CRUD Movie , tela listagem  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de Cadastro de Movie', 										'app/newMovie', 	'SCREEN', 'Cadastro  de Movies');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso a tela de cadastro de  Movie', 'Usuário Poderá ver e acessar a tela de cadastro de  Movie ', 'LEITURA', 'CRUD Movie , tela de cadastro  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de edição de Movie', 										'app/editMovie', 	'SCREEN', 'Edição de  Movies');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso a tela de edição de  Movie', 'Usuário Poderá ver e acessar a tela de edição de  Movie ', 'LEITURA', 'CRUD Movie , tela de edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	-- servicos
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Movies', 										'crud/movies', 		'SERVICE', 			'Servico de Movies');  -- ler e escrever
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao serviço de listagem de  Movie', 'Usuário Poderá acessar ao serviço de listagem de  Movie ', 'LEITURA', 'CRUD Movie , servico listar varios ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao serviço para salvar um novo Movie', 'Usuário Poderá acessar ao serviço para salvar um novo Movie ', 'ESCRITA', 'CRUD Movie , servico salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso TODOS os Movies', 									'crud/movies/all', 		'SERVICE', 			'Servico de TODOS os Movies');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao serviço para listar todos  os Movie', 'Usuário Poderá acessar ao serviço para salvar um novo Movie ', 'LEITURA', 'CRUD Movie , servico listar todos ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Movies por filtro', 							'crud/movies/filter', 		'SERVICE', 			'Servico de Movies sob filtro');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao serviço para listagem por filtro de Movie', 'Usuário Poderá acessar ao serviço para listagem por filtro de Movie ', 'LEITURA', 'CRUD Movie , servico listar por filtro ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso a um Movie específico', 							'crud/movies/[0-9]', 		'SERVICE', 			'Servico para acesso a Movie especifico'); --GET, PUT e DELETE 
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao serviço para listagem de um unico Movie', 'Usuário Poderá acessar ao serviço para listagem de um unico Movie ', 'LEITURA', 'CRUD Movie , servico listar um unico ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao serviço para atualizacao de um unico Movie', 'Usuário Poderá acessar ao serviço para atualizacao de um unico Movie ', 'ATUALIZACAO', 'CRUD Movie , servico atualização ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Movie. Permissão de acesso ao serviço para deleção/remoção de um unico Movie', 'Usuário Poderá acessar ao serviço para deleção/remoção de um unico Movie ', 'DELECAO', 'CRUD Movie , servico remoção deleção');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+-- registros de autorização para Language	
+	-- campos de tela
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Item de menu principal para tela de pesquisa de Language', 			'item-list-Language',	'COMPONENT', 'Menu Languages'					);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao menu de Language', 'Usuário Poderá ver e acessar o item de menu de Language ', 'LEITURA', 'CRUD Language , item Menu ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botôes de salvar e salvar e continuar no formulario de Language', 	'save-Language', 		'COMPONENT', 'Botão Salva Language'			);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao botão de salvar e salvar e continuar no formulario de Language', 'Usuário Poderá ver e acessar o botão de de salvar e salvar e continuar no formulario de Language ', 'LEITURA', 'CRUD Language , botão salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de novo na listagem de Language', 								'new-Language', 		'COMPONENT', 'Botão Novo Language'				);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao botão de novo no formulario de Language', 'Usuário Poderá ver e acessar ao botão de novo no formulario de Language ', 'LEITURA', 'CRUD Language , botão novo ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de Edição de Language no grid de Language na Listagem', 			'edit-Language', 		'COMPONENT', 'Botão Editar Language no Grid de Language');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao botão de edição no grid de Language', 'Usuário Poderá ver e acessar ao botão de edicao no grid de Language ', 'LEITURA', 'CRUD Language , botão edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de deletar Language no grid de Language na Listagem', 			'remove-Language', 	'COMPONENT', 'Botão deletar Language no Grid de Language');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao botão de delete no grid de Language', 'Usuário Poderá ver e acessar ao botão de delete no grid de Language ', 'LEITURA', 'CRUD Language , botão delete ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+    --telas
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de listagem de Language', 										'app/languages', 		'SCREEN', 'Pesquisa de  Languages');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso a tela de listagem de  Language', 'Usuário Poderá ver e acessar a tela de listagem de  Language ', 'LEITURA', 'CRUD Language , tela listagem  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de Cadastro de Language', 										'app/newLanguage', 	'SCREEN', 'Cadastro  de Languages');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso a tela de cadastro de  Language', 'Usuário Poderá ver e acessar a tela de cadastro de  Language ', 'LEITURA', 'CRUD Language , tela de cadastro  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de edição de Language', 										'app/editLanguage', 	'SCREEN', 'Edição de  Languages');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso a tela de edição de  Language', 'Usuário Poderá ver e acessar a tela de edição de  Language ', 'LEITURA', 'CRUD Language , tela de edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	-- servicos
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Languages', 										'crud/languages', 		'SERVICE', 			'Servico de Languages');  -- ler e escrever
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao serviço de listagem de  Language', 'Usuário Poderá acessar ao serviço de listagem de  Language ', 'LEITURA', 'CRUD Language , servico listar varios ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao serviço para salvar um novo Language', 'Usuário Poderá acessar ao serviço para salvar um novo Language ', 'ESCRITA', 'CRUD Language , servico salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso TODOS os Languages', 									'crud/languages/all', 		'SERVICE', 			'Servico de TODOS os Languages');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao serviço para listar todos  os Language', 'Usuário Poderá acessar ao serviço para salvar um novo Language ', 'LEITURA', 'CRUD Language , servico listar todos ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Languages por filtro', 							'crud/languages/filter', 		'SERVICE', 			'Servico de Languages sob filtro');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao serviço para listagem por filtro de Language', 'Usuário Poderá acessar ao serviço para listagem por filtro de Language ', 'LEITURA', 'CRUD Language , servico listar por filtro ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso a um Language específico', 							'crud/languages/[0-9]', 		'SERVICE', 			'Servico para acesso a Language especifico'); --GET, PUT e DELETE 
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao serviço para listagem de um unico Language', 'Usuário Poderá acessar ao serviço para listagem de um unico Language ', 'LEITURA', 'CRUD Language , servico listar um unico ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao serviço para atualizacao de um unico Language', 'Usuário Poderá acessar ao serviço para atualizacao de um unico Language ', 'ATUALIZACAO', 'CRUD Language , servico atualização ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Language. Permissão de acesso ao serviço para deleção/remoção de um unico Language', 'Usuário Poderá acessar ao serviço para deleção/remoção de um unico Language ', 'DELECAO', 'CRUD Language , servico remoção deleção');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+-- registros de autorização para Actor	
+	-- campos de tela
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Item de menu principal para tela de pesquisa de Actor', 			'item-list-Actor',	'COMPONENT', 'Menu Actors'					);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao menu de Actor', 'Usuário Poderá ver e acessar o item de menu de Actor ', 'LEITURA', 'CRUD Actor , item Menu ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botôes de salvar e salvar e continuar no formulario de Actor', 	'save-Actor', 		'COMPONENT', 'Botão Salva Actor'			);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao botão de salvar e salvar e continuar no formulario de Actor', 'Usuário Poderá ver e acessar o botão de de salvar e salvar e continuar no formulario de Actor ', 'LEITURA', 'CRUD Actor , botão salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de novo na listagem de Actor', 								'new-Actor', 		'COMPONENT', 'Botão Novo Actor'				);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao botão de novo no formulario de Actor', 'Usuário Poderá ver e acessar ao botão de novo no formulario de Actor ', 'LEITURA', 'CRUD Actor , botão novo ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de Edição de Actor no grid de Actor na Listagem', 			'edit-Actor', 		'COMPONENT', 'Botão Editar Actor no Grid de Actor');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao botão de edição no grid de Actor', 'Usuário Poderá ver e acessar ao botão de edicao no grid de Actor ', 'LEITURA', 'CRUD Actor , botão edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de deletar Actor no grid de Actor na Listagem', 			'remove-Actor', 	'COMPONENT', 'Botão deletar Actor no Grid de Actor');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao botão de delete no grid de Actor', 'Usuário Poderá ver e acessar ao botão de delete no grid de Actor ', 'LEITURA', 'CRUD Actor , botão delete ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+    --telas
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de listagem de Actor', 										'app/actors', 		'SCREEN', 'Pesquisa de  Actors');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso a tela de listagem de  Actor', 'Usuário Poderá ver e acessar a tela de listagem de  Actor ', 'LEITURA', 'CRUD Actor , tela listagem  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de Cadastro de Actor', 										'app/newActor', 	'SCREEN', 'Cadastro  de Actors');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso a tela de cadastro de  Actor', 'Usuário Poderá ver e acessar a tela de cadastro de  Actor ', 'LEITURA', 'CRUD Actor , tela de cadastro  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de edição de Actor', 										'app/editActor', 	'SCREEN', 'Edição de  Actors');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso a tela de edição de  Actor', 'Usuário Poderá ver e acessar a tela de edição de  Actor ', 'LEITURA', 'CRUD Actor , tela de edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	-- servicos
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Actors', 										'crud/actors', 		'SERVICE', 			'Servico de Actors');  -- ler e escrever
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao serviço de listagem de  Actor', 'Usuário Poderá acessar ao serviço de listagem de  Actor ', 'LEITURA', 'CRUD Actor , servico listar varios ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao serviço para salvar um novo Actor', 'Usuário Poderá acessar ao serviço para salvar um novo Actor ', 'ESCRITA', 'CRUD Actor , servico salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso TODOS os Actors', 									'crud/actors/all', 		'SERVICE', 			'Servico de TODOS os Actors');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao serviço para listar todos  os Actor', 'Usuário Poderá acessar ao serviço para salvar um novo Actor ', 'LEITURA', 'CRUD Actor , servico listar todos ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Actors por filtro', 							'crud/actors/filter', 		'SERVICE', 			'Servico de Actors sob filtro');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao serviço para listagem por filtro de Actor', 'Usuário Poderá acessar ao serviço para listagem por filtro de Actor ', 'LEITURA', 'CRUD Actor , servico listar por filtro ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso a um Actor específico', 							'crud/actors/[0-9]', 		'SERVICE', 			'Servico para acesso a Actor especifico'); --GET, PUT e DELETE 
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao serviço para listagem de um unico Actor', 'Usuário Poderá acessar ao serviço para listagem de um unico Actor ', 'LEITURA', 'CRUD Actor , servico listar um unico ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao serviço para atualizacao de um unico Actor', 'Usuário Poderá acessar ao serviço para atualizacao de um unico Actor ', 'ATUALIZACAO', 'CRUD Actor , servico atualização ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Actor. Permissão de acesso ao serviço para deleção/remoção de um unico Actor', 'Usuário Poderá acessar ao serviço para deleção/remoção de um unico Actor ', 'DELECAO', 'CRUD Actor , servico remoção deleção');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+-- registros de autorização para Usuário	
+	-- campos de tela
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Item de menu principal para tela de pesquisa de Usuário', 			'item-list-User',	'COMPONENT', 'Menu Usuários'					);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao menu de Usuário', 'Usuário Poderá ver e acessar o item de menu de Usuário ', 'LEITURA', 'CRUD Usuário , item Menu ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botôes de salvar e salvar e continuar no formulario de Usuário', 	'save-User', 		'COMPONENT', 'Botão Salva Usuário'			);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao botão de salvar e salvar e continuar no formulario de Usuário', 'Usuário Poderá ver e acessar o botão de de salvar e salvar e continuar no formulario de Usuário ', 'LEITURA', 'CRUD Usuário , botão salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de novo na listagem de Usuário', 								'new-User', 		'COMPONENT', 'Botão Novo Usuário'				);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao botão de novo no formulario de Usuário', 'Usuário Poderá ver e acessar ao botão de novo no formulario de Usuário ', 'LEITURA', 'CRUD Usuário , botão novo ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de Edição de Usuário no grid de Usuário na Listagem', 			'edit-User', 		'COMPONENT', 'Botão Editar Usuário no Grid de Usuário');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao botão de edição no grid de Usuário', 'Usuário Poderá ver e acessar ao botão de edicao no grid de Usuário ', 'LEITURA', 'CRUD Usuário , botão edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de deletar Usuário no grid de Usuário na Listagem', 			'remove-User', 	'COMPONENT', 'Botão deletar Usuário no Grid de Usuário');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao botão de delete no grid de Usuário', 'Usuário Poderá ver e acessar ao botão de delete no grid de Usuário ', 'LEITURA', 'CRUD Usuário , botão delete ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+    --telas
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de listagem de Usuário', 										'app/users', 		'SCREEN', 'Pesquisa de  Usuários');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso a tela de listagem de  Usuário', 'Usuário Poderá ver e acessar a tela de listagem de  Usuário ', 'LEITURA', 'CRUD Usuário , tela listagem  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de Cadastro de Usuário', 										'app/newUser', 	'SCREEN', 'Cadastro  de Usuários');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso a tela de cadastro de  Usuário', 'Usuário Poderá ver e acessar a tela de cadastro de  Usuário ', 'LEITURA', 'CRUD Usuário , tela de cadastro  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de edição de Usuário', 										'app/editUser', 	'SCREEN', 'Edição de  Usuários');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso a tela de edição de  Usuário', 'Usuário Poderá ver e acessar a tela de edição de  Usuário ', 'LEITURA', 'CRUD Usuário , tela de edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	-- servicos
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Usuários', 										'crud/users', 		'SERVICE', 			'Servico de Usuários');  -- ler e escrever
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao serviço de listagem de  Usuário', 'Usuário Poderá acessar ao serviço de listagem de  Usuário ', 'LEITURA', 'CRUD Usuário , servico listar varios ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao serviço para salvar um novo Usuário', 'Usuário Poderá acessar ao serviço para salvar um novo Usuário ', 'ESCRITA', 'CRUD Usuário , servico salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso TODOS os Usuários', 									'crud/users/all', 		'SERVICE', 			'Servico de TODOS os Usuários');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao serviço para listar todos  os Usuário', 'Usuário Poderá acessar ao serviço para salvar um novo Usuário ', 'LEITURA', 'CRUD Usuário , servico listar todos ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Usuários por filtro', 							'crud/users/filter', 		'SERVICE', 			'Servico de Usuários sob filtro');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao serviço para listagem por filtro de Usuário', 'Usuário Poderá acessar ao serviço para listagem por filtro de Usuário ', 'LEITURA', 'CRUD Usuário , servico listar por filtro ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso a um Usuário específico', 							'crud/users/[0-9]', 		'SERVICE', 			'Servico para acesso a Usuário especifico'); --GET, PUT e DELETE 
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao serviço para listagem de um unico Usuário', 'Usuário Poderá acessar ao serviço para listagem de um unico Usuário ', 'LEITURA', 'CRUD Usuário , servico listar um unico ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao serviço para atualizacao de um unico Usuário', 'Usuário Poderá acessar ao serviço para atualizacao de um unico Usuário ', 'ATUALIZACAO', 'CRUD Usuário , servico atualização ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Usuário. Permissão de acesso ao serviço para deleção/remoção de um unico Usuário', 'Usuário Poderá acessar ao serviço para deleção/remoção de um unico Usuário ', 'DELECAO', 'CRUD Usuário , servico remoção deleção');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+-- registros de autorização para Papel	
+	-- campos de tela
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Item de menu principal para tela de pesquisa de Papel', 			'item-list-Role',	'COMPONENT', 'Menu Papels'					);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao menu de Papel', 'Usuário Poderá ver e acessar o item de menu de Papel ', 'LEITURA', 'CRUD Papel , item Menu ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botôes de salvar e salvar e continuar no formulario de Papel', 	'save-Role', 		'COMPONENT', 'Botão Salva Papel'			);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao botão de salvar e salvar e continuar no formulario de Papel', 'Usuário Poderá ver e acessar o botão de de salvar e salvar e continuar no formulario de Papel ', 'LEITURA', 'CRUD Papel , botão salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de novo na listagem de Papel', 								'new-Role', 		'COMPONENT', 'Botão Novo Papel'				);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao botão de novo no formulario de Papel', 'Usuário Poderá ver e acessar ao botão de novo no formulario de Papel ', 'LEITURA', 'CRUD Papel , botão novo ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de Edição de Papel no grid de Papel na Listagem', 			'edit-Role', 		'COMPONENT', 'Botão Editar Papel no Grid de Papel');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao botão de edição no grid de Papel', 'Usuário Poderá ver e acessar ao botão de edicao no grid de Papel ', 'LEITURA', 'CRUD Papel , botão edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de deletar Papel no grid de Papel na Listagem', 			'remove-Role', 	'COMPONENT', 'Botão deletar Papel no Grid de Papel');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao botão de delete no grid de Papel', 'Usuário Poderá ver e acessar ao botão de delete no grid de Papel ', 'LEITURA', 'CRUD Papel , botão delete ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+    --telas
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de listagem de Papel', 										'app/roles', 		'SCREEN', 'Pesquisa de  Papels');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso a tela de listagem de  Papel', 'Usuário Poderá ver e acessar a tela de listagem de  Papel ', 'LEITURA', 'CRUD Papel , tela listagem  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de Cadastro de Papel', 										'app/newRole', 	'SCREEN', 'Cadastro  de Papels');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso a tela de cadastro de  Papel', 'Usuário Poderá ver e acessar a tela de cadastro de  Papel ', 'LEITURA', 'CRUD Papel , tela de cadastro  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de edição de Papel', 										'app/editRole', 	'SCREEN', 'Edição de  Papels');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso a tela de edição de  Papel', 'Usuário Poderá ver e acessar a tela de edição de  Papel ', 'LEITURA', 'CRUD Papel , tela de edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	-- servicos
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Papels', 										'crud/roles', 		'SERVICE', 			'Servico de Papels');  -- ler e escrever
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao serviço de listagem de  Papel', 'Usuário Poderá acessar ao serviço de listagem de  Papel ', 'LEITURA', 'CRUD Papel , servico listar varios ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao serviço para salvar um novo Papel', 'Usuário Poderá acessar ao serviço para salvar um novo Papel ', 'ESCRITA', 'CRUD Papel , servico salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso TODOS os Papels', 									'crud/roles/all', 		'SERVICE', 			'Servico de TODOS os Papels');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao serviço para listar todos  os Papel', 'Usuário Poderá acessar ao serviço para salvar um novo Papel ', 'LEITURA', 'CRUD Papel , servico listar todos ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Papels por filtro', 							'crud/roles/filter', 		'SERVICE', 			'Servico de Papels sob filtro');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao serviço para listagem por filtro de Papel', 'Usuário Poderá acessar ao serviço para listagem por filtro de Papel ', 'LEITURA', 'CRUD Papel , servico listar por filtro ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso a um Papel específico', 							'crud/roles/[0-9]', 		'SERVICE', 			'Servico para acesso a Papel especifico'); --GET, PUT e DELETE 
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao serviço para listagem de um unico Papel', 'Usuário Poderá acessar ao serviço para listagem de um unico Papel ', 'LEITURA', 'CRUD Papel , servico listar um unico ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao serviço para atualizacao de um unico Papel', 'Usuário Poderá acessar ao serviço para atualizacao de um unico Papel ', 'ATUALIZACAO', 'CRUD Papel , servico atualização ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Papel. Permissão de acesso ao serviço para deleção/remoção de um unico Papel', 'Usuário Poderá acessar ao serviço para deleção/remoção de um unico Papel ', 'DELECAO', 'CRUD Papel , servico remoção deleção');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+-- registros de autorização para Permissão	
+	-- campos de tela
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Item de menu principal para tela de pesquisa de Permissão', 			'item-list-Permission',	'COMPONENT', 'Menu Permissãos'					);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao menu de Permissão', 'Usuário Poderá ver e acessar o item de menu de Permissão ', 'LEITURA', 'CRUD Permissão , item Menu ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botôes de salvar e salvar e continuar no formulario de Permissão', 	'save-Permission', 		'COMPONENT', 'Botão Salva Permissão'			);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao botão de salvar e salvar e continuar no formulario de Permissão', 'Usuário Poderá ver e acessar o botão de de salvar e salvar e continuar no formulario de Permissão ', 'LEITURA', 'CRUD Permissão , botão salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de novo na listagem de Permissão', 								'new-Permission', 		'COMPONENT', 'Botão Novo Permissão'				);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao botão de novo no formulario de Permissão', 'Usuário Poderá ver e acessar ao botão de novo no formulario de Permissão ', 'LEITURA', 'CRUD Permissão , botão novo ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de Edição de Permissão no grid de Permissão na Listagem', 			'edit-Permission', 		'COMPONENT', 'Botão Editar Permissão no Grid de Permissão');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao botão de edição no grid de Permissão', 'Usuário Poderá ver e acessar ao botão de edicao no grid de Permissão ', 'LEITURA', 'CRUD Permissão , botão edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de deletar Permissão no grid de Permissão na Listagem', 			'remove-Permission', 	'COMPONENT', 'Botão deletar Permissão no Grid de Permissão');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao botão de delete no grid de Permissão', 'Usuário Poderá ver e acessar ao botão de delete no grid de Permissão ', 'LEITURA', 'CRUD Permissão , botão delete ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+    --telas
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de listagem de Permissão', 										'app/permissions', 		'SCREEN', 'Pesquisa de  Permissãos');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso a tela de listagem de  Permissão', 'Usuário Poderá ver e acessar a tela de listagem de  Permissão ', 'LEITURA', 'CRUD Permissão , tela listagem  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de Cadastro de Permissão', 										'app/newPermission', 	'SCREEN', 'Cadastro  de Permissãos');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso a tela de cadastro de  Permissão', 'Usuário Poderá ver e acessar a tela de cadastro de  Permissão ', 'LEITURA', 'CRUD Permissão , tela de cadastro  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de edição de Permissão', 										'app/editPermission', 	'SCREEN', 'Edição de  Permissãos');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso a tela de edição de  Permissão', 'Usuário Poderá ver e acessar a tela de edição de  Permissão ', 'LEITURA', 'CRUD Permissão , tela de edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	-- servicos
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Permissãos', 										'crud/permissions', 		'SERVICE', 			'Servico de Permissãos');  -- ler e escrever
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao serviço de listagem de  Permissão', 'Usuário Poderá acessar ao serviço de listagem de  Permissão ', 'LEITURA', 'CRUD Permissão , servico listar varios ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao serviço para salvar um novo Permissão', 'Usuário Poderá acessar ao serviço para salvar um novo Permissão ', 'ESCRITA', 'CRUD Permissão , servico salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso TODOS os Permissãos', 									'crud/permissions/all', 		'SERVICE', 			'Servico de TODOS os Permissãos');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao serviço para listar todos  os Permissão', 'Usuário Poderá acessar ao serviço para salvar um novo Permissão ', 'LEITURA', 'CRUD Permissão , servico listar todos ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Permissãos por filtro', 							'crud/permissions/filter', 		'SERVICE', 			'Servico de Permissãos sob filtro');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao serviço para listagem por filtro de Permissão', 'Usuário Poderá acessar ao serviço para listagem por filtro de Permissão ', 'LEITURA', 'CRUD Permissão , servico listar por filtro ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso a um Permissão específico', 							'crud/permissions/[0-9]', 		'SERVICE', 			'Servico para acesso a Permissão especifico'); --GET, PUT e DELETE 
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao serviço para listagem de um unico Permissão', 'Usuário Poderá acessar ao serviço para listagem de um unico Permissão ', 'LEITURA', 'CRUD Permissão , servico listar um unico ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao serviço para atualizacao de um unico Permissão', 'Usuário Poderá acessar ao serviço para atualizacao de um unico Permissão ', 'ATUALIZACAO', 'CRUD Permissão , servico atualização ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Permissão. Permissão de acesso ao serviço para deleção/remoção de um unico Permissão', 'Usuário Poderá acessar ao serviço para deleção/remoção de um unico Permissão ', 'DELECAO', 'CRUD Permissão , servico remoção deleção');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+-- registros de autorização para Grupo de Permissões	
+	-- campos de tela
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Item de menu principal para tela de pesquisa de Grupo de Permissões', 			'item-list-Group',	'COMPONENT', 'Menu Grupo de Permissõess'					);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao menu de Grupo de Permissões', 'Usuário Poderá ver e acessar o item de menu de Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , item Menu ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botôes de salvar e salvar e continuar no formulario de Grupo de Permissões', 	'save-Group', 		'COMPONENT', 'Botão Salva Grupo de Permissões'			);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao botão de salvar e salvar e continuar no formulario de Grupo de Permissões', 'Usuário Poderá ver e acessar o botão de de salvar e salvar e continuar no formulario de Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , botão salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de novo na listagem de Grupo de Permissões', 								'new-Group', 		'COMPONENT', 'Botão Novo Grupo de Permissões'				);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao botão de novo no formulario de Grupo de Permissões', 'Usuário Poderá ver e acessar ao botão de novo no formulario de Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , botão novo ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de Edição de Grupo de Permissões no grid de Grupo de Permissões na Listagem', 			'edit-Group', 		'COMPONENT', 'Botão Editar Grupo de Permissões no Grid de Grupo de Permissões');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao botão de edição no grid de Grupo de Permissões', 'Usuário Poderá ver e acessar ao botão de edicao no grid de Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , botão edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de deletar Grupo de Permissões no grid de Grupo de Permissões na Listagem', 			'remove-Group', 	'COMPONENT', 'Botão deletar Grupo de Permissões no Grid de Grupo de Permissões');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao botão de delete no grid de Grupo de Permissões', 'Usuário Poderá ver e acessar ao botão de delete no grid de Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , botão delete ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+    --telas
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de listagem de Grupo de Permissões', 										'app/groups', 		'SCREEN', 'Pesquisa de  Grupo de Permissõess');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso a tela de listagem de  Grupo de Permissões', 'Usuário Poderá ver e acessar a tela de listagem de  Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , tela listagem  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de Cadastro de Grupo de Permissões', 										'app/newGroup', 	'SCREEN', 'Cadastro  de Grupo de Permissõess');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso a tela de cadastro de  Grupo de Permissões', 'Usuário Poderá ver e acessar a tela de cadastro de  Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , tela de cadastro  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de edição de Grupo de Permissões', 										'app/editGroup', 	'SCREEN', 'Edição de  Grupo de Permissõess');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso a tela de edição de  Grupo de Permissões', 'Usuário Poderá ver e acessar a tela de edição de  Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , tela de edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	-- servicos
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Grupo de Permissõess', 										'crud/groups', 		'SERVICE', 			'Servico de Grupo de Permissõess');  -- ler e escrever
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao serviço de listagem de  Grupo de Permissões', 'Usuário Poderá acessar ao serviço de listagem de  Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , servico listar varios ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao serviço para salvar um novo Grupo de Permissões', 'Usuário Poderá acessar ao serviço para salvar um novo Grupo de Permissões ', 'ESCRITA', 'CRUD Grupo de Permissões , servico salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso TODOS os Grupo de Permissõess', 									'crud/groups/all', 		'SERVICE', 			'Servico de TODOS os Grupo de Permissõess');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao serviço para listar todos  os Grupo de Permissões', 'Usuário Poderá acessar ao serviço para salvar um novo Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , servico listar todos ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Grupo de Permissõess por filtro', 							'crud/groups/filter', 		'SERVICE', 			'Servico de Grupo de Permissõess sob filtro');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao serviço para listagem por filtro de Grupo de Permissões', 'Usuário Poderá acessar ao serviço para listagem por filtro de Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , servico listar por filtro ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso a um Grupo de Permissões específico', 							'crud/groups/[0-9]', 		'SERVICE', 			'Servico para acesso a Grupo de Permissões especifico'); --GET, PUT e DELETE 
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao serviço para listagem de um unico Grupo de Permissões', 'Usuário Poderá acessar ao serviço para listagem de um unico Grupo de Permissões ', 'LEITURA', 'CRUD Grupo de Permissões , servico listar um unico ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao serviço para atualizacao de um unico Grupo de Permissões', 'Usuário Poderá acessar ao serviço para atualizacao de um unico Grupo de Permissões ', 'ATUALIZACAO', 'CRUD Grupo de Permissões , servico atualização ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Grupo de Permissões. Permissão de acesso ao serviço para deleção/remoção de um unico Grupo de Permissões', 'Usuário Poderá acessar ao serviço para deleção/remoção de um unico Grupo de Permissões ', 'DELECAO', 'CRUD Grupo de Permissões , servico remoção deleção');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+-- registros de autorização para Item	
+	-- campos de tela
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Item de menu principal para tela de pesquisa de Item', 			'item-list-Item',	'COMPONENT', 'Menu Items'					);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao menu de Item', 'Usuário Poderá ver e acessar o item de menu de Item ', 'LEITURA', 'CRUD Item , item Menu ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botôes de salvar e salvar e continuar no formulario de Item', 	'save-Item', 		'COMPONENT', 'Botão Salva Item'			);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao botão de salvar e salvar e continuar no formulario de Item', 'Usuário Poderá ver e acessar o botão de de salvar e salvar e continuar no formulario de Item ', 'LEITURA', 'CRUD Item , botão salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de novo na listagem de Item', 								'new-Item', 		'COMPONENT', 'Botão Novo Item'				);
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao botão de novo no formulario de Item', 'Usuário Poderá ver e acessar ao botão de novo no formulario de Item ', 'LEITURA', 'CRUD Item , botão novo ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de Edição de Item no grid de Item na Listagem', 			'edit-Item', 		'COMPONENT', 'Botão Editar Item no Grid de Item');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao botão de edição no grid de Item', 'Usuário Poderá ver e acessar ao botão de edicao no grid de Item ', 'LEITURA', 'CRUD Item , botão edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Botão de deletar Item no grid de Item na Listagem', 			'remove-Item', 	'COMPONENT', 'Botão deletar Item no Grid de Item');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao botão de delete no grid de Item', 'Usuário Poderá ver e acessar ao botão de delete no grid de Item ', 'LEITURA', 'CRUD Item , botão delete ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+    --telas
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de listagem de Item', 										'app/items', 		'SCREEN', 'Pesquisa de  Items');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso a tela de listagem de  Item', 'Usuário Poderá ver e acessar a tela de listagem de  Item ', 'LEITURA', 'CRUD Item , tela listagem  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de Cadastro de Item', 										'app/newItem', 	'SCREEN', 'Cadastro  de Items');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso a tela de cadastro de  Item', 'Usuário Poderá ver e acessar a tela de cadastro de  Item ', 'LEITURA', 'CRUD Item , tela de cadastro  ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Tela de edição de Item', 										'app/editItem', 	'SCREEN', 'Edição de  Items');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso a tela de edição de  Item', 'Usuário Poderá ver e acessar a tela de edição de  Item ', 'LEITURA', 'CRUD Item , tela de edicao ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	
+	-- servicos
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Items', 										'crud/items', 		'SERVICE', 			'Servico de Items');  -- ler e escrever
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao serviço de listagem de  Item', 'Usuário Poderá acessar ao serviço de listagem de  Item ', 'LEITURA', 'CRUD Item , servico listar varios ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao serviço para salvar um novo Item', 'Usuário Poderá acessar ao serviço para salvar um novo Item ', 'ESCRITA', 'CRUD Item , servico salvar ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso TODOS os Items', 									'crud/items/all', 		'SERVICE', 			'Servico de TODOS os Items');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao serviço para listar todos  os Item', 'Usuário Poderá acessar ao serviço para salvar um novo Item ', 'LEITURA', 'CRUD Item , servico listar todos ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso aos Items por filtro', 							'crud/items/filter', 		'SERVICE', 			'Servico de Items sob filtro');
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao serviço para listagem por filtro de Item', 'Usuário Poderá acessar ao serviço para listagem por filtro de Item ', 'LEITURA', 'CRUD Item , servico listar por filtro ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	INSERT INTO item(id,     description, identifier, type, name) VALUES	((select max(id) + 1 from item), 'Url de acesso a um Item específico', 							'crud/items/[0-9]', 		'SERVICE', 			'Servico para acesso a Item especifico'); --GET, PUT e DELETE 
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao serviço para listagem de um unico Item', 'Usuário Poderá acessar ao serviço para listagem de um unico Item ', 'LEITURA', 'CRUD Item , servico listar um unico ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao serviço para atualizacao de um unico Item', 'Usuário Poderá acessar ao serviço para atualizacao de um unico Item ', 'ATUALIZACAO', 'CRUD Item , servico atualização ');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+	INSERT INTO persmission((select max(id) + 1 from persmission),  name, description,  operation, tags) VALUES ('Cadastro de Item. Permissão de acesso ao serviço para deleção/remoção de um unico Item', 'Usuário Poderá acessar ao serviço para deleção/remoção de um unico Item ', 'DELECAO', 'CRUD Item , servico remoção deleção');
+	INSERT INTO permission_item(permission_id, item_id)VALUES ((select max(id)  from persmission), (select max(id) from item));	
+
+	
+import GenreController from './presentation/http/controllers/GenreController';
+import MovieController from './presentation/http/controllers/MovieController';
+import LanguageController from './presentation/http/controllers/LanguageController';
+import ActorController from './presentation/http/controllers/ActorController';
+import UserController from './presentation/http/controllers/UserController';
+import RoleController from './presentation/http/controllers/RoleController';
+import PermissionController from './presentation/http/controllers/PermissionController';
+import GroupController from './presentation/http/controllers/GroupController';
+import ItemController from './presentation/http/controllers/ItemController';
+appExpress.use('/genres', GenreController)
+appExpress.use('/movies', MovieController)
+appExpress.use('/languages', LanguageController)
+appExpress.use('/actors', ActorController)
+appExpress.use('/users', UserController)
+appExpress.use('/roles', RoleController)
+appExpress.use('/permissions', PermissionController)
+appExpress.use('/groups', GroupController)
+appExpress.use('/items', ItemController)
+
