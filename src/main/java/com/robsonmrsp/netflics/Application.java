@@ -8,9 +8,9 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @SpringBootApplication
-@ComponentScan("com.robsonmrsp.netflics")
-@EntityScan({ "com.robsonmrsp.netflics.model", "com.robsonmrsp.netflics.core.model" })
-@EnableJpaRepositories("com.robsonmrsp.netflics")
+@ComponentScan()
+@EntityScan()
+@EnableJpaRepositories()
 public class Application {
 
 	public static void main(String[] args) {
