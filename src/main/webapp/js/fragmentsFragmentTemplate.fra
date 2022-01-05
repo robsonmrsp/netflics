@@ -5,15 +5,15 @@
 	############################################################################
 	<jaxrs:server id="services" address="/">
 		<jaxrs:serviceBeans>
-				<bean class="br.com.sints.app.rs.GenreResources" />
-		<bean class="br.com.sints.app.rs.MovieResources" />
-		<bean class="br.com.sints.app.rs.LanguageResources" />
-		<bean class="br.com.sints.app.rs.ActorResources" />
-		<bean class="br.com.sints.app.rs.UserResources" />
-		<bean class="br.com.sints.app.rs.RoleResources" />
-		<bean class="br.com.sints.app.rs.PermissionResources" />
-		<bean class="br.com.sints.app.rs.GroupResources" />
-		<bean class="br.com.sints.app.rs.ItemResources" />
+				<bean class="br.com.jsetup.app.rs.GenreResources" />
+		<bean class="br.com.jsetup.app.rs.MovieResources" />
+		<bean class="br.com.jsetup.app.rs.LanguageResources" />
+		<bean class="br.com.jsetup.app.rs.ActorResources" />
+		<bean class="br.com.jsetup.app.rs.UserResources" />
+		<bean class="br.com.jsetup.app.rs.RoleResources" />
+		<bean class="br.com.jsetup.app.rs.PermissionResources" />
+		<bean class="br.com.jsetup.app.rs.GroupResources" />
+		<bean class="br.com.jsetup.app.rs.ItemResources" />
 		</jaxrs:serviceBeans>
 		<jaxrs:providers>
 			<bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider" />
