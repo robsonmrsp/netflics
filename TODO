@@ -1,0 +1,4 @@
+
+
+- Do NOT generate tests for infra classes.
+- generate DockerFile
