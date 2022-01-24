@@ -2,3 +2,14 @@
 
 - Do NOT generate tests for infra classes.
 - generate DockerFile
+
+-create a docker-compose.yaml file.
+this file will be fill with the db, and the api.
+
+
+the db it will be a postgres 12
+
+and the api the image we created before.
+
+
+

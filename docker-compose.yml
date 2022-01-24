@@ -1,0 +1,28 @@
+version: '3.8'
+services:
+  app:
+    image: robsonmrsp/netflics
+    container_name: netflics_app
+    depends_on:
+      - db-postgres
+    ports:
+      - "9991:9991"
+    volumes:
+      - .:/app/
+    networks:
+      - postgres-compose-network
+    command: ["./compose/start.sh"]
+  db-postgres:
+    image: postgres:11-alpine
+    container_name: db_postgres
+    environment:
+      POSTGRES_DB: db_netflics
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456a
+    ports:
+      - "5439:5432"
+    networks:
+      - postgres-compose-network 
+networks: 
+  postgres-compose-network:
+    driver: bridge
