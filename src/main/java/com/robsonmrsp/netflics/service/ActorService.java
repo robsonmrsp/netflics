@@ -2,15 +2,11 @@
 package com.robsonmrsp.netflics.service;
 import java.util.Optional;
 
-import java.util.List;
-import java.time.LocalDateTime;
-import java.time.LocalDate;
 import com.robsonmrsp.netflics.core.model.Tenant;
-import com.robsonmrsp.netflics.model.Actor;
-import com.robsonmrsp.netflics.model.filter.FilterActor;
-
 import com.robsonmrsp.netflics.core.persistence.pagination.Pager;
 import com.robsonmrsp.netflics.core.persistence.pagination.SearchParameters;
+import com.robsonmrsp.netflics.model.Actor;
+import com.robsonmrsp.netflics.model.filter.FilterActor;
 
 public interface ActorService {
 

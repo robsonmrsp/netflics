@@ -2,8 +2,15 @@ package com.robsonmrsp.netflics;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
+
+import com.robsonmrsp.netflics.core.persistence.CatchThrowConstraintViolationException;
+import com.robsonmrsp.netflics.core.rs.exception.SimpleErrorMessageHandlerExceptionResolver;
+import com.robsonmrsp.netflics.core.serialization.CustomDoubleDeserializer;
+import com.robsonmrsp.netflics.core.serialization.CustomLocalDateDeserializer;
+import com.robsonmrsp.netflics.core.serialization.CustomLocalDateSerializer;
+import com.robsonmrsp.netflics.core.serialization.CustomLocalDateTimeDeserializer;
+import com.robsonmrsp.netflics.core.serialization.CustomLocalDateTimeSerializer;
 
 import org.springframework.aop.framework.autoproxy.BeanNameAutoProxyCreator;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -22,14 +29,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
-
-import com.robsonmrsp.netflics.core.persistence.CatchThrowConstraintViolationException;
-import com.robsonmrsp.netflics.core.rs.exception.SimpleErrorMessageHandlerExceptionResolver;
-import com.robsonmrsp.netflics.core.serialization.CustomDoubleDeserializer;
-import com.robsonmrsp.netflics.core.serialization.CustomLocalDateDeserializer;
-import com.robsonmrsp.netflics.core.serialization.CustomLocalDateSerializer;
-import com.robsonmrsp.netflics.core.serialization.CustomLocalDateTimeDeserializer;
-import com.robsonmrsp.netflics.core.serialization.CustomLocalDateTimeSerializer;
 
 @Configuration
 @EnableWebMvc

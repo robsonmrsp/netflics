@@ -1,6 +1,11 @@
 # netflics
 
 
-
 run the command:
-docker build -t robsonmrsp/netflics .
+
+$  docker-compose up 
+
+after that, you can access the url http://localhost:9991
+
+the user preconfigured is jsetup/123456
+

@@ -3,6 +3,14 @@ package com.robsonmrsp.netflics.service;
 
 import java.util.Optional;
 
+import com.robsonmrsp.netflics.core.model.Tenant ;
+import com.robsonmrsp.netflics.core.persistence.pagination.Pager;
+import com.robsonmrsp.netflics.core.persistence.pagination.SearchParameters;
+import com.robsonmrsp.netflics.model.User;
+import com.robsonmrsp.netflics.model.filter.FilterUser;
+import com.robsonmrsp.netflics.persistence.UserRepository;
+import com.robsonmrsp.netflics.persistence.UserSpecificationHelper;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,18 +18,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import com.robsonmrsp.netflics.core.model.Tenant ;
-
-import com.robsonmrsp.netflics.model.User;
-import com.robsonmrsp.netflics.persistence.UserRepository;
-import com.robsonmrsp.netflics.persistence.UserSpecificationHelper;
-import com.robsonmrsp.netflics.model.filter.FilterUser;
-
-import com.robsonmrsp.netflics.core.persistence.pagination.Pager;
-import com.robsonmrsp.netflics.core.rs.exception.ValidationException;
-import com.robsonmrsp.netflics.core.persistence.pagination.SearchParameters;
-import com.robsonmrsp.netflics.core.utils.DateUtil;
-import com.robsonmrsp.netflics.core.utils.Util;
 
 @Service
 @Transactional
